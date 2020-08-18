@@ -1,6 +1,6 @@
 const axios = require('axios');
 const db = require('../server/config/db');
-const Payments = require('../models/payments');
+const Payment = require('../models/Payments');
 
 
 
@@ -14,7 +14,7 @@ exports.GetProfits = async(req, res) => {
             },
         })  
         const ethPriceUsd = response.data.data.ETH.quote.USD.price;
-        const payment = await Payments.findAll({
+        const payment = await Payment.findAll({
             where:{
                 userId: req.userid
             },
