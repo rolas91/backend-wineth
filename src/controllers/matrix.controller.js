@@ -369,8 +369,8 @@ async function getAscendingLine(userid, bucketid){
     let amountLevel3 = (bucket[0].price * 90) / 100;
     
     
-    const levels = {
-        'nivel1':{
+    const levels = [
+        {
             'user':nivel1[0].userId,
             'address':nivel1[0].user.addressWallet,
             'amount':parseFloat(amountLevel1AndLevel2.toFixed(3)),
@@ -378,21 +378,21 @@ async function getAscendingLine(userid, bucketid){
             'wei': Math.round(amountLevel1AndLevel2/0.000000000000000001)
             
         },
-        'nivel2':{
+        {
             'user':nivel2[0].userId,
             'address':nivel2[0].user.addressWallet,
             'amount':parseFloat(amountLevel1AndLevel2.toFixed(3)),
             statusLevel2,
             'wei': Math.round(amountLevel1AndLevel2/0.000000000000000001)
         }, 
-        'nivel3':{
+        {
             'user':nivel3[0].userId,
             'address':nivel3[0].user.addressWallet,
             'amount':parseFloat(amountLevel3.toFixed(3)),
             statusLevel3,
             'wei': Math.round(parseFloat(amountLevel3.toFixed(3)) /0.000000000000000001)
         }
-    }
+    ]
     return levels;
 }
 async function validateLevels1(data, bucketid){ 
