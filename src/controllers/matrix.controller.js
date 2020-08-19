@@ -2,6 +2,7 @@ const Matrix = require('../models/Matrix');
 const User = require('../models/Users');
 const Bucket = require('../models/Buckets');
 const ActiveBuckets = require('../models/ActiveBuckets');
+const PaymentStatus = require('../models/PaymentStatus');
 const cofig = require('../config/config');
 exports.RegisterUserRed = async(req, res) => {  
    try {
@@ -309,7 +310,8 @@ async function derrameBinariaPatrocinador(spillOverMatrix){
 
 }
 //Obtengo linea Ascendiente de pago
-async function getAscendingLine(userid, bucketid){   
+async function getAscendingLine(userid, bucketid){ 
+    let statusLevel1, statusLevel2, statusLevel3 = '';  
     const resultMatrix = await Matrix.findAll({
         where:{
             userId:userid
@@ -335,6 +337,33 @@ async function getAscendingLine(userid, bucketid){
 
     const bucket = await Bucket.findAll({where:{id:bucketid}});
 
+    const paymentStatus = await PaymentStatus.findOne({
+        where:{
+            userId:userid,
+            bucketId:bucketid
+        }
+    });
+
+    if(paymentStatus !== null){
+        if(paymentStatus.status === 1){
+            statusLevel1 = 'processed';
+            statusLevel2 = 'pending'
+            statusLevel3 = 'pending'
+        }else if(paymentStatus.status === 2){
+            statusLevel1 = 'processed';
+            statusLevel2 = 'processed'
+            statusLevel3 = 'pending'
+        }else if(paymentStatus.status === 3){
+            statusLevel1 = 'processed';
+            statusLevel2 = 'processed'
+            statusLevel3 = 'processed'
+        }
+    }else{
+        statusLevel1 = 'pending';
+        statusLevel2 = 'pending'
+        statusLevel3 = 'pending'
+    }
+
     
     let amountLevel1AndLevel2 = (bucket[0].price * 5) / 100;
     let amountLevel3 = (bucket[0].price * 90) / 100;
@@ -344,20 +373,23 @@ async function getAscendingLine(userid, bucketid){
         'nivel1':{
             'user':nivel1[0].userId,
             'address':nivel1[0].user.addressWallet,
-            'amount':amountLevel1AndLevel2,
+            'amount':parseFloat(amountLevel1AndLevel2.toFixed(3)),
+            statusLevel1,
             'wei': Math.round(amountLevel1AndLevel2/0.000000000000000001)
             
         },
         'nivel2':{
             'user':nivel2[0].userId,
             'address':nivel2[0].user.addressWallet,
-            'amount':amountLevel1AndLevel2,
+            'amount':parseFloat(amountLevel1AndLevel2.toFixed(3)),
+            statusLevel2,
             'wei': Math.round(amountLevel1AndLevel2/0.000000000000000001)
         }, 
         'nivel3':{
             'user':nivel3[0].userId,
             'address':nivel3[0].user.addressWallet,
             'amount':parseFloat(amountLevel3.toFixed(3)),
+            statusLevel3,
             'wei': Math.round(parseFloat(amountLevel3.toFixed(3)) /0.000000000000000001)
         }
     }

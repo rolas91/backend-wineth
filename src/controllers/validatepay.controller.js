@@ -9,8 +9,8 @@ exports.VerifyPay = async(req, res) => {
         const userId = req.userid;
         const amountToEightDecimal = parseFloat(amount).toFixed(8)
         const arraymi = new Array();           
-        const response = await axios.get(`https://api.blockcypher.com/v1/eth/main/txs/${hash}`);
-        
+        const response = await axios.get(`https://api.blockcypher.com/v1/eth/main/txs/${hash}`);        
+        console.log(response)
         response.data.outputs.forEach(output =>{             
             arraymi.push(((output.value)*0.000000000000000001).toFixed(8).toString())
         });        
