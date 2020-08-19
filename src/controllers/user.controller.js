@@ -18,7 +18,8 @@ exports.GetProfits = async(req, res) => {
             headers: {
                 'X-CMC_PRO_API_KEY': 'f78fa793-b95e-4a58-a0ef-760f070defb0'
             },
-        })          
+        })  
+        
         const ethPriceUsd = response.data.data.ETH.quote.USD.price;
         const payment = await Payment.findAll({
             where:{
@@ -29,8 +30,6 @@ exports.GetProfits = async(req, res) => {
             order: db.literal('total DESC')
         })
 
-        // total = ()
-        
         res.status(200).json({
             status:200,
             profits:parseFloat(payment[0].total),

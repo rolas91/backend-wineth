@@ -55,7 +55,11 @@ exports.signIn = async(req, res) =>{
 exports.signAnyUser = async(req, res) =>{
     try {
         const {id} = req.body;        
-        const user = await Users.findOne({where:{id:id}, include:ActiveBuckets});
+        const user = await Users.findOne({
+            where:{
+                id:id
+            }
+        });       
         if(!user) return res.status(400).json({status:400, message:'user is wrong'})       
         res.status(200).json({
             status:200,                       
@@ -64,6 +68,7 @@ exports.signAnyUser = async(req, res) =>{
         })
         
     } catch (error) {
+        console.error(error)
         res.status(400).json({status:400, message:error})
     }
 }

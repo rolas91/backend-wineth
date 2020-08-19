@@ -176,8 +176,7 @@ async function createTreeData(userid){
                             referer:{
                                 id:response2[s].user.id,
                                 wallet:response2[s].user.addressWallet,
-                                positionMatrix:response2[s].positionMatrix,
-                                buckets:bucketlevel2                                    
+                                positionMatrix:response2[s].positionMatrix,                                                                 
                             }
                         }
                     }
