@@ -370,7 +370,7 @@ async function getAscendingLine(userid, bucketid){
     
     
     const levels = {
-        Level1:{            
+        nivel1:{            
             'user':nivel1[0].userId,
             'address':nivel1[0].user.addressWallet,
             'amount':parseFloat(amountLevel1AndLevel2.toFixed(3)),
@@ -378,14 +378,14 @@ async function getAscendingLine(userid, bucketid){
             'wei': Math.round(amountLevel1AndLevel2/0.000000000000000001)
             
         },
-        Level2:{           
+        nivel2:{           
             'user':nivel2[0].userId,
             'address':nivel2[0].user.addressWallet,
             'amount':parseFloat(amountLevel1AndLevel2.toFixed(3)),
             'status':statusLevel2,
             'wei': Math.round(amountLevel1AndLevel2/0.000000000000000001)
         }, 
-        Level3:{            
+        nivel3:{            
             'user':nivel3[0].userId,
             'address':nivel3[0].user.addressWallet,
             'amount':parseFloat(amountLevel3.toFixed(3)),
