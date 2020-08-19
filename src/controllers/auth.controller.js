@@ -51,3 +51,19 @@ exports.signIn = async(req, res) =>{
         res.status(400).json({status:400, message:error})
     }
 }
+
+exports.signAnyUser = async(req, res) =>{
+    try {
+        const {id} = req.body;        
+        const user = await Users.findOne({where:{id:id}, include:ActiveBuckets});
+        if(!user) return res.status(400).json({status:400, message:'user is wrong'})       
+        res.status(200).json({
+            status:200,                       
+            message:'user is authenticated'            
+            // refreshToken:createRefreshToken(user)
+        })
+        
+    } catch (error) {
+        res.status(400).json({status:400, message:error})
+    }
+}

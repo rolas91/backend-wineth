@@ -5,18 +5,24 @@ const Payment = require('../models/Payments');
 
 
 exports.GetProfits = async(req, res) => {
-    try {   
-        const total = 0;
+    try { 
+        
+        let userId = 0;
+        if(req.userid != undefined){
+            userId = req.userid
+        }else{
+            userId = req.params.id
+        }
         const eth = 'eth';      
         const response = await axios.get(`https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=${eth}`,{
             headers: {
                 'X-CMC_PRO_API_KEY': 'f78fa793-b95e-4a58-a0ef-760f070defb0'
             },
-        })  
+        })          
         const ethPriceUsd = response.data.data.ETH.quote.USD.price;
         const payment = await Payment.findAll({
             where:{
-                userId: req.userid
+                userId: userId
             },
             attributes: [[db.fn('sum', db.col('amount')), 'total']],	                        
             raw: true,            

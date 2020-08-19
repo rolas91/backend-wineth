@@ -9,7 +9,7 @@ const Payment = db.define('payment',{
     },
     userId: Sequelize.INTEGER,
     sender:Sequelize.INTEGER,
-    amount:Sequelize.DECIMAL(10,2),
+    amount:Sequelize.DECIMAL(10,4),
     bucketId:Sequelize.INTEGER,
     date:Sequelize.DATEONLY
 },{
