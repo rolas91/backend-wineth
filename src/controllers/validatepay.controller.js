@@ -65,7 +65,9 @@ async function createOrupdateActiveBucket(user, bucket){
             })
         }else if(verifyActive.state === false){
             verifyActive.update({
-                state:true
+                state:true,
+                dateInit:new Date(),
+                dateEnd:dateEnd(new Date(), 30)
             })
         } 
         
