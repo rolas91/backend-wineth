@@ -4,11 +4,11 @@ exports.getAllBucket = async(req, res) => {
     try {                          
         const {userId} = req.params;        
         const bucket = await Bucket.findAll();          
-        let aBucket1 = await getActiveBuckeByUser(userId, bucket[0].id)
-        let aBucket2 = await getActiveBuckeByUser(userId, bucket[1].id)
-        let aBucket3 = await getActiveBuckeByUser(userId, bucket[2].id)
-        let aBucket4 = await getActiveBuckeByUser(userId, bucket[3].id)
-        let aBucket5 = await getActiveBuckeByUser(userId, bucket[4].id)       
+        let aBucket1 = await getActiveBucketByUser(userId, bucket[0].id)
+        let aBucket2 = await getActiveBucketByUser(userId, bucket[1].id)
+        let aBucket3 = await getActiveBucketByUser(userId, bucket[2].id)
+        let aBucket4 = await getActiveBucketByUser(userId, bucket[3].id)
+        let aBucket5 = await getActiveBucketByUser(userId, bucket[4].id)       
                 
         let buckets = [
             {
@@ -68,7 +68,7 @@ exports.createBucket = async(req, res) => {
     }
 }
 
-async function getActiveBuckeByUser(user, bucket){
+async function getActiveBucketByUser(user, bucket){
     try {
         return await ActiveBuckets.findAll({
             where:{
