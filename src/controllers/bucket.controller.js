@@ -1,13 +1,9 @@
 const Bucket = require('../models/Buckets');
 const ActiveBuckets = require('../models/ActiveBuckets');
 exports.getAllBucket = async(req, res) => {
-    try {   
-        
-       
-        
-        const userId = req.userid;        
-        const bucket = await Bucket.findAll();  
-        
+    try {                          
+        const {userId} = req.params;        
+        const bucket = await Bucket.findAll();          
         let aBucket1 = await getActiveBuckeByUser(userId, bucket[0].id)
         let aBucket2 = await getActiveBuckeByUser(userId, bucket[1].id)
         let aBucket3 = await getActiveBuckeByUser(userId, bucket[2].id)
@@ -85,8 +81,7 @@ async function getActiveBuckeByUser(user, bucket){
     }
 }
 
-function getDynamicDates(date){
-    console.log(date)
+function getDynamicDates(date){    
     if(date !=0){
         let Now = new Date();
         let miliSegundosDias = 24 * 60 * 60 * 1000;   

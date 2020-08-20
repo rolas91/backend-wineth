@@ -18,7 +18,7 @@ router.get('/user/profits/:id', GetProfits);
 
 //bucket route
 router.post('/bucket/create', TokenValidation,createBucket);
-router.get('/bucket/getAll', TokenValidation, getAllBucket);
+router.get('/bucket/getAll/:userid', getAllBucket);
 
 //matrix route
 router.post('/matrix/join_red', TokenValidation,RegisterUserRed);
