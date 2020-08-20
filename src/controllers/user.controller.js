@@ -56,14 +56,14 @@ exports.GetProfits = async(req, res) => {
         });        
         const rqTotal = getDescendingLine(userId);        
         const [response, payment, total, lastBucket] = await Promise.all([rqResponse, rqPayment, rqTotal, rqlastBucket]);
-
         const ethPriceUsd = response.data.data.ETH.quote.USD.price;
+        
         res.status(200).json({
             status:200,
             profits:parseFloat(payment[0].total),
             usdProfits:parseFloat((parseFloat(payment[0].total) * ethPriceUsd).toFixed(2)),
             partners: total,  
-            lastBucket:lastBucket[0].bucketId          
+            lastBucket:(lastBucket.length != 0) ? lastBucket[0].bucketId : null          
         })
         
     } catch (error) {
