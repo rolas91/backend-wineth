@@ -37,12 +37,16 @@ exports.signUp = async(req, res) => {
 exports.signIn = async(req, res) =>{
     try {
         const {wallet} = req.body;        
-        const user = await Users.findOne({where:{addressWallet:wallet}, include:ActiveBuckets});
+        const user = await Users.findOne({where:{addressWallet:wallet}});
+        const lastBucket = await ActiveBuckets.findAll({
+            where:{userId:user.id}, 
+            order: [ [ 'id', 'DESC' ]]
+        }); 
         if(!user) return res.status(400).json({status:400, message:'wallet is wrong'})       
         res.status(200).json({
             status:200,            
             accessToken:createAccessToken(user),
-            isActiveBucket:(user.activebuckets.length > 0) ? true : false,
+            isActiveBucket:(lastBucket.length != 0 && lastBucket.state > 0) ? lastBucket.state : false,
             message:'user is authenticated'            
             // refreshToken:createRefreshToken(user)
         })
