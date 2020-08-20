@@ -9,8 +9,7 @@ exports.VerifyPay = async(req, res) => {
         const userId = req.userid;
         const amountToEightDecimal = parseFloat(amount).toFixed(8)
         const arraymi = new Array();           
-        const response = await axios.get(`https://api.blockcypher.com/v1/eth/main/txs/${hash}`);        
-        console.log(response)
+        const response = await axios.get(`https://api.blockcypher.com/v1/eth/main/txs/${hash}`);                
         response.data.outputs.forEach(output =>{             
             arraymi.push(((output.value)*0.000000000000000001).toFixed(8).toString())
         });        
@@ -62,7 +61,7 @@ async function createOrupdateActiveBucket(user, bucket){
                 bucketId:bucket,
                 state:true,
                 dateInit:new Date(),
-                dateEnd:new Date()
+                dateEnd:dateEnd(new Date(), 30)
             })
         }else if(verifyActive.state === false){
             verifyActive.update({
@@ -99,4 +98,9 @@ async function PaymentState(user, bucket){
     } catch (error) {
         console.error(error)
     }
+}
+
+function dateEnd(date, day){
+    date.setDate(date.getDate() + day);    
+    return date;
 }
