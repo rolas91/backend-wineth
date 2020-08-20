@@ -12,12 +12,7 @@ const Matrix = db.define('matrix',{
     orderMatrix:Sequelize.INTEGER,
     spillOver:Sequelize.INTEGER,
     positionMatrix:Sequelize.STRING,
-    sponsor:Sequelize.STRING,
-    active:{
-        type:Sequelize.BOOLEAN,
-        defaultValue:false
-    },
-    bucketId:Sequelize.INTEGER
+    sponsor:Sequelize.STRING    
 },{
     timestamps:true
 });

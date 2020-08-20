@@ -7,13 +7,15 @@ const {signUp, signIn,signAnyUser} = require('../controllers/auth.controller');
 const {createBucket,getAllBucket} = require('../controllers/bucket.controller');
 const {RegisterUserRed,getSponsorForPay,getTreeMatrix} = require('../controllers/matrix.controller');
 const {VerifyPay} = require('../controllers/validatepay.controller');
-const {GetProfits} = require('../controllers/user.controller');
+const {GetProfits,GetProfitsData} = require('../controllers/user.controller');
 
 //users route
 router.post('/auth/signup', signUp);
 router.post('/auth/signin', signIn);
 router.post('/auth/withid/signin', signAnyUser);
 router.get('/user/profits', TokenValidation, GetProfits);
+router.get('/user/profits/getdata', TokenValidation, GetProfitsData);
+router.get('/user/profits/getdata/:id', GetProfitsData);
 router.get('/user/profits/:id', GetProfits);
 
 //bucket route

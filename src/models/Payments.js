@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require('../server/config/db');
-
+const Sender = require('../models/Users');
 const Payment = db.define('payment',{
     id:{
         type:Sequelize.INTEGER,
@@ -15,5 +15,6 @@ const Payment = db.define('payment',{
 },{
     timestamps:false
 });
-
+// Payment.belongsTo(User,{foreignKey:'userId'});
+Payment.belongsTo(Sender,{foreignKey:'sender'});
 module.exports = Payment;
