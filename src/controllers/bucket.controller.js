@@ -4,12 +4,12 @@ exports.getAllBucket = async(req, res) => {
     try {                          
         const {userId} = req.params;        
         const bucket = await Bucket.findAll();          
-        let aBucket1 = await getActiveBucketByUser(userId, bucket[0].id)
-        let aBucket2 = await getActiveBucketByUser(userId, bucket[1].id)
+        let aBucket1 = await getActiveBucketByUser(userId, bucket[0].id)      
+        let aBucket2 = await getActiveBucketByUser(userId, bucket[1].id)        
         let aBucket3 = await getActiveBucketByUser(userId, bucket[2].id)
         let aBucket4 = await getActiveBucketByUser(userId, bucket[3].id)
-        let aBucket5 = await getActiveBucketByUser(userId, bucket[4].id)       
-                
+        let aBucket5 = await getActiveBucketByUser(userId, bucket[4].id)           
+              
         let buckets = [
             {
                 id:bucket[0].id,
@@ -22,29 +22,29 @@ exports.getAllBucket = async(req, res) => {
                 id:bucket[1].id,
                 name:bucket[1].name,
                 price:bucket[1].price,
-                status: (aBucket2[1] != undefined) ? aBucket1[1].state : false,
-                expire:getDynamicDates((aBucket1[1] != undefined) ? new Date(aBucket1[1].dateEnd) : 0)
+                status: (aBucket2[0] != undefined) ? aBucket2[0].state : false,
+                expire:getDynamicDates((aBucket2[0] != undefined) ? new Date(aBucket2[0].dateEnd) : 0)
             },
             {
                 id:bucket[2].id,
                 name:bucket[2].name,
                 price:bucket[2].price,
-                status: (aBucket3[2] != undefined) ? aBucket1[2].state : false,
-                expire:getDynamicDates((aBucket1[2] != undefined) ? new Date(aBucket1[2].dateEnd) : 0)
+                status: (aBucket3[0] != undefined) ? aBucket3[0].state : false,
+                expire:getDynamicDates((aBucket3[0] != undefined) ? new Date(aBucket3[0].dateEnd) : 0)
             },
             {
                 id:bucket[3].id,
                 name:bucket[3].name,
                 price:bucket[3].price,
-                status: (aBucket4[3] != undefined) ? aBucket4[3].state : false,
-                expire:getDynamicDates((aBucket1[3] != undefined) ? new Date(aBucket1[3].dateEnd) : 0)                
+                status: (aBucket4[0] != undefined) ? aBucket4[0].state : false,
+                expire:getDynamicDates((aBucket4[0] != undefined) ? new Date(aBucket4[0].dateEnd) : 0)                
             },
             {
                 id:bucket[4].id,
                 name:bucket[4].name,
                 price:bucket[4].price,
-                status: (aBucket5[4] != undefined) ? aBucket5[4].state : false,
-                expire:getDynamicDates((aBucket1[4] != undefined) ? new Date(aBucket1[4].dateEnd) : 0)
+                status: (aBucket5[0] != undefined) ? aBucket5[0].state : false,
+                expire:getDynamicDates((aBucket5[0] != undefined) ? new Date(aBucket5[0].dateEnd) : 0)
             }
         ]     
         

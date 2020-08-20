@@ -43,4 +43,5 @@ exports.GetProfits = async(req, res) => {
 }
 async function getPartners(){
     
+    
 }
