@@ -109,24 +109,11 @@ async function createTreeData(userid){
     let level1 = []
     let level2 = []
     let level3 = [];
-    let bucketlevel1 = [];
-    let bucketlevel2 = [];
-    let bucketlevel3 = [];
-    let bucketlevel4 = [];
-    let bucketlevel5 = [];
 
     let getOrderMatixSponsor =  await Matrix.findOne({
         where:{userid},
         include:User
-    });
-    
-   
-    // let level1 = await Matrix.findAll({        
-    //     where:{spillOver:getOrderMatixSponsor.orderMatrix},
-    //     include:User
-    // })  
-    // sideANivel1 = await cycleSideA(level1);
-    // sideBNivel1 = await cycleSideB(level1);
+    });          
    
     for(let i=0; i < 1; i++){        
         let response = await Matrix.findAll({
@@ -134,14 +121,7 @@ async function createTreeData(userid){
             include:[
                 {model: User, include:ActiveBuckets}
             ]
-        })  
-
-        // for(let b=0; b<response[i].user.activebuckets.length; b++){
-        //     bucketlevel1.push({
-        //         bucket:response[i].user.activebuckets[b].bucketId,
-        //         state:response[i].user.activebuckets[b].state
-        //     })
-        // } 
+        })       
         
         for(let a=0; a<response.length; a++){                       
             level1.push({
