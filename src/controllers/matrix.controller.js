@@ -308,8 +308,7 @@ async function getAscendingLine(userid, bucketid){
             
         }
     }    
-  
-
+    
     let nivel1 = await validateLevels1(resultMatrix[0], bucketid);    
     let nivel2 = await validateLevels2(resultMatrix[0], bucketid);
     let nivel3 = await validateLevels3(resultMatrix[0], bucketid);

@@ -10,8 +10,8 @@ const ActiveBuckets = db.define('activebucket',{
     userId:Sequelize.INTEGER,
     bucketId:Sequelize.INTEGER,
     state:Sequelize.BOOLEAN,
-    dateInit:Sequelize.DATEONLY,
-    dateEnd:Sequelize.DATEONLY
+    dateInit:Sequelize.DATE,
+    dateEnd:Sequelize.DATE
 },{
     timestamps:false
 });
