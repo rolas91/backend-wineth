@@ -41,7 +41,7 @@ app.use(express.static(path.join(__dirname, '../../build')));
 app.use('/api', routes)
 
 app.route('*', (req, res) => {
-    res.sendFile(path.join(__dirname,'../../build'));
+    res.sendFile(path.join(__dirname,'../../build','index.html'));
 })
 
 app.listen(process.env.PORT || 5000, (err) => {
