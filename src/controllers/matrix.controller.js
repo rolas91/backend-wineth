@@ -309,10 +309,8 @@ async function getAscendingLine(userid, bucketid){
         }
     }    
     
-    let nivel1 = await validateLevels1(resultMatrix[0], bucketid);    
-    let nivel2 = await validateLevels2(resultMatrix[0], bucketid);
-    let nivel3 = await validateLevels3(resultMatrix[0], bucketid);
-
+    const [nivel1, nivel2, nivel3] = await Promise.all([validateLevels1(resultMatrix[0], bucketid), validateLevels2(resultMatrix[0], bucketid), validateLevels3(resultMatrix[0], bucketid)])    
+    
     const bucket = await Bucket.findAll({where:{id:bucketid}});
 
     const paymentStatus = await PaymentStatus.findOne({
@@ -345,8 +343,7 @@ async function getAscendingLine(userid, bucketid){
     
     let amountLevel1AndLevel2 = (bucket.length > 0) ? (bucket[0].price * 5) / 100 : 0;
     let amountLevel3 = (bucket.length > 0) ? (bucket[0].price * 90) / 100 : 0;
-    
-    
+        
     const levels = {
         nivel1:{            
             'user':nivel1[0].userId,
@@ -372,63 +369,77 @@ async function getAscendingLine(userid, bucketid){
     }
     return levels;
 }
-async function validateLevels1(data, bucketid){ 
+const  validateLevels1 = async(data, bucketid) =>{ 
     try {        
-        let spillOver = data.spillOver;   
-        let linea1, linea3 ,linea2;     
-        linea1 = await Matrix.findAll({
+        let spillOver = data.spillOver;           
+        let Line;
+        const linea1 = await Matrix.findAll({
             where:{
-                userId:spillOver
+                orderMatrix:spillOver
             },
             include:[
                 {
                     model:User , include:ActiveBuckets       
                 }
             ]
-        }) 
-
-        linea2 = await Matrix.findAll({
+        }); 
+      
+        const linea2 = await Matrix.findAll({
             where:{
-                userId:linea1[0].spillOver
+                orderMatrix:linea1[0].spillOver
             },
             include:[
                 {
                     model:User , include:ActiveBuckets       
                 }
             ]
-        })  
-        
-        if(linea2.length > 0){
-            linea3 = await Matrix.findAll({
-                where:{
-                    userId:linea2[0].spillOver
-                },
-                include:[
-                    {
-                        model:User , include:ActiveBuckets       
-                    }
-                ]
-            })  
-        }else{
-            linea3 = undefined
-        }   
+        });
+                      
+        const linea3 = await Matrix.findAll({
+            where:{
+                orderMatrix:linea2[0].spillOver
+            },
+            include:[
+                {
+                     model:User , include:ActiveBuckets       
+                }
+            ]
+        });
 
-        if(linea1[0] !== undefined && linea1[0].user.activebuckets[0] !== undefined && linea1[0].user.activebuckets[0].bucketId == bucketid && linea1[0].user.activebuckets[0].state == true){                               
-            return linea1
-        }else if(linea2[0] !== undefined && linea2[0].user.activebuckets[0] !== undefined && linea2[0].user.activebuckets[0].bucketId == bucketid && linea2[0].user.activebuckets[0].state == true){                                                   
-            return linea2
-        }else if(linea3 !== undefined && linea3.length > 0 && linea3[0].user.activebuckets[0] !== undefined && linea3[0].user.activebuckets[0].bucketId == bucketid && linea3[0].user.activebuckets[0].state == true){
-            return linea3
-        }else{                   
-            return await Matrix.findAll({
-                    where:{
-                            userId:1
-                    },
-                    include:{
-                            model:User
-                    }
-                }) 
-            }                       
+        const superUser = await Matrix.findAll({
+            where:{
+                    userId:1
+            },
+            include:{
+                model:User
+            }
+        }); 
+                                                   
+        if(linea1[0] !== undefined && linea2[0] !== undefined & linea3[0] !== undefined){              
+            if(linea1[0].user.activebuckets.length > 0 || linea2[0].user.activebuckets.length > 0 || linea3[0].user.activebuckets.length > 0){                
+                linea1[0].user.activebuckets.forEach(value => {                                        
+                    if(value.bucketId == bucketid && value.state == true){
+                       console.log('yea1',value.bucketId == bucketid, value.state == true)                       
+                        Line = linea1
+                    }else{
+                        linea2[0].user.activebuckets.forEach(value => {                      
+                            if(value.bucketId == bucketid && value.state == true){                                
+                                Line = linea2
+                            }else{
+                                linea3[0].user.activebuckets.forEach(value => {                      
+                                    if(value.bucketId == bucketid && value.state == true){                                        
+                                        Line = linea3
+                                    }else{                 
+                                        Line = superUser
+                                    }                                          
+                                })
+                            }                                           
+                        })
+                    }                                           
+                })                
+            }            
+        }        
+        return Line;                            
     } catch (error) {
         console.error(error)        
     }
@@ -436,55 +447,67 @@ async function validateLevels1(data, bucketid){
 async function validateLevels2(data, bucketid){ 
     try {        
         let spillOver = data.spillOver;
-        let linea1, linea2, linea3;        
-        linea1 = await Matrix.findAll({
+        let Line;
+        const linea1 = await Matrix.findAll({
             where:{
-                userId:spillOver
+                orderMatrix:spillOver
             },
             include:[
                 {
                     model:User , include:ActiveBuckets       
                 }
             ]
-        })              
-        linea2 = await Matrix.findAll({
+        });             
+        const linea2 = await Matrix.findAll({
             where:{
-                userId:linea1[0].spillOver
+                orderMatrix:linea1[0].spillOver
             },
             include:[
                 {
                     model:User , include:ActiveBuckets       
                 }
             ]
-        })
-        if(linea2.length > 0){
-            linea3 = await Matrix.findAll({
-                where:{
-                    userId:linea2[0].spillOver
-                },
-                include:[
-                    {
-                        model:User , include:ActiveBuckets       
-                    }
-                ]
-            }) 
-        }else{
-            linea3 = undefined
-        }
-        if(linea2[0] !== undefined && linea2[0].user.activebuckets[0] !== undefined && linea2[0].user.activebuckets[0].bucketId == bucketid && linea2[0].user.activebuckets[0].state == true){                               
-           return linea2
-        }else if(linea3 !== undefined && linea3.length > 0 && linea3[0].user.activebuckets[0] !== undefined && linea3[0].user.activebuckets[0].bucketId == bucketid && linea3[0].user.activebuckets[0].state == true){ 
-            return linea3
-        }else{
-            return await Matrix.findAll({
-                where:{
+        });
+        
+        const linea3 = await Matrix.findAll({
+            where:{
+                orderMatrix:linea2[0].spillOver
+            },
+            include:[
+                {
+                    model:User , include:ActiveBuckets       
+                }
+            ]
+        });
+
+        const superUser = await Matrix.findAll({
+            where:{
                     userId:1
-                },
-                include:{
-                    model:User
-                }
-            }) 
-        }                                 
+            },
+            include:{
+                model:User
+            }
+        });               
+
+        if(linea2[0] !== undefined & linea3[0] !== undefined){              
+            if(linea2[0].user.activebuckets.length > 0 || linea3[0].user.activebuckets.length > 0){                                
+                linea2[0].user.activebuckets.forEach(value => {                      
+                    if(value.bucketId == bucketid && value.state == true){                                
+                        Line = linea2
+                    }else{
+                        linea3[0].user.activebuckets.forEach(value => {                      
+                            if(value.bucketId == bucketid && value.state == true){                                        
+                                Line = linea3
+                            }else{                 
+                                Line = superUser
+                            }                                          
+                        })
+                    }                                           
+                })                                                                                             
+            }            
+        } 
+        
+        return Line;
     } catch (error) {
         console.error(error)        
     }
@@ -492,10 +515,10 @@ async function validateLevels2(data, bucketid){
 async function validateLevels3(data, bucketid){ 
     try {        
         let spillOver = data.spillOver;              
-        let linea1, linea2, linea3;
-        linea1 = await Matrix.findAll({
+        let Line;
+        const linea1 = await Matrix.findAll({
             where:{
-                userId:spillOver
+                orderMatrix:spillOver
             },
             include:[
                 {
@@ -504,9 +527,9 @@ async function validateLevels3(data, bucketid){
             ]
         })      
         
-        linea2 = await Matrix.findAll({
+        const linea2 = await Matrix.findAll({
             where:{
-                userId:linea1[0].spillOver
+                orderMatrix:linea1[0].spillOver
             },
             include:[
                 {
@@ -515,33 +538,38 @@ async function validateLevels3(data, bucketid){
             ]
         })  
 
-        if(linea2.length > 0){
-            linea3 = await Matrix.findAll({
+      
+        const linea3 = await Matrix.findAll({
                 where:{
-                    userId:linea2[0].spillOver
+                    orderMatrix:linea2[0].spillOver
                 },
-                include:[
-                    {
-                        model:User , include:ActiveBuckets       
-                    }
-                ]
-            }) 
-        }else{
-            linea3 = undefined;
-        }
+            include:[
+                {
+                    model:User , include:ActiveBuckets       
+                }
+            ]
+        })
 
-        if(linea3 !== undefined && linea3.length > 0 && linea3[0].user.activebuckets[0] !== undefined && linea3[0].user.activebuckets[0].bucketId == bucketid && linea3[0].user.activebuckets[0].state == true){                               
-           return linea3
-        }else{             
-            return await Matrix.findAll({
-                    where:{
-                        userId:1
-                    },
-                    include:{
-                        model:User
-                    }
-                }) 
-            }                                 
+        const superUser = await Matrix.findAll({
+            where:{
+                    userId:1
+            },
+            include:{
+                model:User
+            }
+        });         
+        if(linea3[0] !== undefined){              
+                if(linea3[0].user.activebuckets.length > 0){                                                  
+                    linea3[0].user.activebuckets.forEach(value => {                      
+                        if(value.bucketId == bucketid && value.state == true){                                        
+                            Line = linea3
+                        }else{                 
+                            Line = superUser
+                        }                                          
+                    })                                                                                                                
+                }            
+        }
+        return Line;                                
     } catch (error) {
         console.error(error)        
     }
