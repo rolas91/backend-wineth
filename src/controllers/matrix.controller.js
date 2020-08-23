@@ -375,8 +375,9 @@ async function getAscendingLine(userid, bucketid){
 }
 async function validateLevels1(data, bucketid){ 
     try {        
-        let spillOver = data.spillOver;          
-        let linea1 = await Matrix.findAll({
+        let spillOver = data.spillOver;   
+        let linea1, linea3 ,linea2;     
+        linea1 = await Matrix.findAll({
             where:{
                 userId:spillOver
             },
@@ -387,7 +388,7 @@ async function validateLevels1(data, bucketid){
             ]
         }) 
 
-        let linea2 = await Matrix.findAll({
+        linea2 = await Matrix.findAll({
             where:{
                 userId:linea1[0].spillOver
             },
@@ -397,21 +398,27 @@ async function validateLevels1(data, bucketid){
                 }
             ]
         })  
-        let linea3 = await Matrix.findAll({
-            where:{
-                userId:linea2[0].spillOver
-            },
-            include:[
-                {
-                    model:User , include:ActiveBuckets       
-                }
-            ]
-        })       
+        
+        if(linea2.length > 0){
+            linea3 = await Matrix.findAll({
+                where:{
+                    userId:linea2[0].spillOver
+                },
+                include:[
+                    {
+                        model:User , include:ActiveBuckets       
+                    }
+                ]
+            })  
+        }else{
+            linea3 = undefined
+        }   
+
         if(linea1[0] !== undefined && linea1[0].user.activebuckets[0] !== undefined && linea1[0].user.activebuckets[0].bucketId == bucketid && linea1[0].user.activebuckets[0].state == true){                               
             return linea1
         }else if(linea2[0] !== undefined && linea2[0].user.activebuckets[0] !== undefined && linea2[0].user.activebuckets[0].bucketId == bucketid && linea2[0].user.activebuckets[0].state == true){                                                   
             return linea2
-        }else if(linea3[0] !== undefined && linea3[0].user.activebuckets[0] !== undefined && linea3[0].user.activebuckets[0].bucketId == bucketid && linea3[0].user.activebuckets[0].state == true){
+        }else if(linea3 !== undefined && linea3.length > 0 && linea3[0].user.activebuckets[0] !== undefined && linea3[0].user.activebuckets[0].bucketId == bucketid && linea3[0].user.activebuckets[0].state == true){
             return linea3
         }else{                   
             return await Matrix.findAll({
@@ -429,8 +436,9 @@ async function validateLevels1(data, bucketid){
 }
 async function validateLevels2(data, bucketid){ 
     try {        
-        let spillOver = data.spillOver;        
-        let linea1 = await Matrix.findAll({
+        let spillOver = data.spillOver;
+        let linea1, linea2, linea3;        
+        linea1 = await Matrix.findAll({
             where:{
                 userId:spillOver
             },
@@ -450,19 +458,23 @@ async function validateLevels2(data, bucketid){
                 }
             ]
         })
-        let linea3 = await Matrix.findAll({
-            where:{
-                userId:linea2[0].spillOver
-            },
-            include:[
-                {
-                    model:User , include:ActiveBuckets       
-                }
-            ]
-        })       
+        if(linea2.length > 0){
+            linea3 = await Matrix.findAll({
+                where:{
+                    userId:linea2[0].spillOver
+                },
+                include:[
+                    {
+                        model:User , include:ActiveBuckets       
+                    }
+                ]
+            }) 
+        }else{
+            linea3 = undefined
+        }
         if(linea2[0] !== undefined && linea2[0].user.activebuckets[0] !== undefined && linea2[0].user.activebuckets[0].bucketId == bucketid && linea2[0].user.activebuckets[0].state == true){                               
            return linea2
-        }else if(linea3[0] !== undefined && linea3[0].user.activebuckets[0] !== undefined && linea3[0].user.activebuckets[0].bucketId == bucketid && linea3[0].user.activebuckets[0].state == true){ 
+        }else if(linea3 !== undefined && linea3.length > 0 && linea3[0].user.activebuckets[0] !== undefined && linea3[0].user.activebuckets[0].bucketId == bucketid && linea3[0].user.activebuckets[0].state == true){ 
             return linea3
         }else{
             return await Matrix.findAll({
@@ -481,8 +493,8 @@ async function validateLevels2(data, bucketid){
 async function validateLevels3(data, bucketid){ 
     try {        
         let spillOver = data.spillOver;              
-
-        let linea1 = await Matrix.findAll({
+        let linea1, linea2, linea3;
+        linea1 = await Matrix.findAll({
             where:{
                 userId:spillOver
             },
@@ -504,18 +516,22 @@ async function validateLevels3(data, bucketid){
             ]
         })  
 
-        let linea3 = await Matrix.findAll({
-            where:{
-                userId:linea2[0].spillOver
-            },
-            include:[
-                {
-                    model:User , include:ActiveBuckets       
-                }
-            ]
-        }) 
+        if(linea2.length > 0){
+            linea3 = await Matrix.findAll({
+                where:{
+                    userId:linea2[0].spillOver
+                },
+                include:[
+                    {
+                        model:User , include:ActiveBuckets       
+                    }
+                ]
+            }) 
+        }else{
+            linea3 = undefined;
+        }
 
-        if(linea3[0] !== undefined && linea3[0].user.activebuckets[0] !== undefined && linea3[0].user.activebuckets[0].bucketId == bucketid && linea3[0].user.activebuckets[0].state == true){                               
+        if(linea3 !== undefined && linea3.length > 0 && linea3[0].user.activebuckets[0] !== undefined && linea3[0].user.activebuckets[0].bucketId == bucketid && linea3[0].user.activebuckets[0].state == true){                               
            return linea3
         }else{             
             return await Matrix.findAll({
