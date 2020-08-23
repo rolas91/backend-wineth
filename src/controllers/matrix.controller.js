@@ -414,31 +414,30 @@ const  validateLevels1 = async(data, bucketid) =>{
                 model:User
             }
         }); 
-                                                   
+                                           
         if(linea1[0] !== undefined && linea2[0] !== undefined & linea3[0] !== undefined){              
-            if(linea1[0].user.activebuckets.length > 0 || linea2[0].user.activebuckets.length > 0 || linea3[0].user.activebuckets.length > 0){                
+            if(linea1[0].user.activebuckets.length > 0){                                
                 linea1[0].user.activebuckets.forEach(value => {                                        
-                    if(value.bucketId == bucketid && value.state == true){
-                       console.log('yea1',value.bucketId == bucketid, value.state == true)                       
+                    if(value.bucketId == bucketid && value.state == true){                                              
                         Line = linea1
-                    }else{
-                        linea2[0].user.activebuckets.forEach(value => {                      
-                            if(value.bucketId == bucketid && value.state == true){                                
-                                Line = linea2
-                            }else{
-                                linea3[0].user.activebuckets.forEach(value => {                      
-                                    if(value.bucketId == bucketid && value.state == true){                                        
-                                        Line = linea3
-                                    }else{                 
-                                        Line = superUser
-                                    }                                          
-                                })
-                            }                                           
-                        })
                     }                                           
                 })                
-            }            
-        }        
+            }else if(linea2[0].user.activebuckets.length > 0 ){
+                linea2[0].user.activebuckets.forEach(value => {                      
+                    if(value.bucketId == bucketid && value.state == true){                                
+                        Line = linea2
+                    }                                          
+                })
+            }else if( linea3[0].user.activebuckets.length > 0){
+                linea3[0].user.activebuckets.forEach(value => {                      
+                    if(value.bucketId == bucketid && value.state == true){                                        
+                        Line = linea3
+                    }                                         
+                })
+            }else{                 
+                Line = superUser
+            }        
+        }                
         return Line;                            
     } catch (error) {
         console.error(error)        
@@ -489,24 +488,23 @@ async function validateLevels2(data, bucketid){
             }
         });               
 
-        if(linea2[0] !== undefined & linea3[0] !== undefined){              
-            if(linea2[0].user.activebuckets.length > 0 || linea3[0].user.activebuckets.length > 0){                                
+        if(linea2[0] !== undefined & linea3[0] !== undefined){  
+            if(linea2[0].user.activebuckets.length > 0 ){
                 linea2[0].user.activebuckets.forEach(value => {                      
                     if(value.bucketId == bucketid && value.state == true){                                
                         Line = linea2
-                    }else{
-                        linea3[0].user.activebuckets.forEach(value => {                      
-                            if(value.bucketId == bucketid && value.state == true){                                        
-                                Line = linea3
-                            }else{                 
-                                Line = superUser
-                            }                                          
-                        })
-                    }                                           
-                })                                                                                             
-            }            
-        } 
-        
+                    }                                          
+                })
+            }else if( linea3[0].user.activebuckets.length > 0){
+                linea3[0].user.activebuckets.forEach(value => {                      
+                    if(value.bucketId == bucketid && value.state == true){                                        
+                        Line = linea3
+                    }                                         
+                })
+            }else{                 
+                Line = superUser
+            }                                   
+        }         
         return Line;
     } catch (error) {
         console.error(error)        
@@ -559,15 +557,15 @@ async function validateLevels3(data, bucketid){
             }
         });         
         if(linea3[0] !== undefined){              
-                if(linea3[0].user.activebuckets.length > 0){                                                  
-                    linea3[0].user.activebuckets.forEach(value => {                      
-                        if(value.bucketId == bucketid && value.state == true){                                        
-                            Line = linea3
-                        }else{                 
-                            Line = superUser
-                        }                                          
-                    })                                                                                                                
-                }            
+            if(linea3[0].user.activebuckets.length > 0){                                                  
+                linea3[0].user.activebuckets.forEach(value => {                      
+                    if(value.bucketId == bucketid && value.state == true){                                        
+                        Line = linea3
+                    }else{                 
+                        Line = superUser
+                    }                                          
+                })                                                                                                                
+            }                            
         }
         return Line;                                
     } catch (error) {
