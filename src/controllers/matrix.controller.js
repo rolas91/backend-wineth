@@ -343,8 +343,8 @@ async function getAscendingLine(userid, bucketid){
     }
 
     
-    let amountLevel1AndLevel2 = (bucket[0].price * 5) / 100;
-    let amountLevel3 = (bucket[0].price * 90) / 100;
+    let amountLevel1AndLevel2 = (bucket.length > 0) ? (bucket[0].price * 5) / 100 : 0;
+    let amountLevel3 = (bucket.length > 0) ? (bucket[0].price * 90) / 100 : 0;
     
     
     const levels = {
@@ -353,8 +353,7 @@ async function getAscendingLine(userid, bucketid){
             'address':nivel1[0].user.addressWallet,
             'amount':parseFloat(amountLevel1AndLevel2.toFixed(3)),
             'status':statusLevel1,
-            'wei': Math.round(amountLevel1AndLevel2/0.000000000000000001)
-            
+            'wei': Math.round(amountLevel1AndLevel2/0.000000000000000001)            
         },
         nivel2:{           
             'user':nivel2[0].userId,
