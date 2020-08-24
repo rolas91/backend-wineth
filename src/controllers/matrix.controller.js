@@ -371,9 +371,10 @@ async function getAscendingLine(userid, bucketid){
 }
 const  validateLevels1 = async(data, bucketid) =>{ 
     try {        
-        let spillOver = data.spillOver;           
+        let spillOver = data.spillOver;   
+        let linea1, linea2, linea3;        
         let Line;
-        const linea1 = await Matrix.findAll({
+        linea1 = await Matrix.findAll({
             where:{
                 orderMatrix:spillOver
             },
@@ -383,29 +384,33 @@ const  validateLevels1 = async(data, bucketid) =>{
                 }
             ]
         }); 
-      
-        const linea2 = await Matrix.findAll({
-            where:{
-                orderMatrix:linea1[0].spillOver
-            },
-            include:[
-                {
-                    model:User , include:ActiveBuckets       
-                }
-            ]
-        });
-                      
-        const linea3 = await Matrix.findAll({
-            where:{
-                orderMatrix:linea2[0].spillOver
-            },
-            include:[
-                {
-                     model:User , include:ActiveBuckets       
-                }
-            ]
-        });
-
+        
+        if(linea1.length > 0){
+            linea2 = await Matrix.findAll({
+                where:{
+                    orderMatrix:linea1[0].spillOver
+                },
+                include:[
+                    {
+                        model:User , include:ActiveBuckets       
+                    }
+                ]
+            }); 
+        }
+        
+        if(linea2.length > 0){
+            linea3 = await Matrix.findAll({
+                where:{
+                    orderMatrix:linea2[0].spillOver
+                },
+                include:[
+                    {
+                        model:User , include:ActiveBuckets       
+                    }
+                ]
+            });
+        }        
+                                              
         const superUser = await Matrix.findAll({
             where:{
                     userId:1
@@ -414,32 +419,34 @@ const  validateLevels1 = async(data, bucketid) =>{
                 model:User
             }
         }); 
-                                   
-        if(linea1[0] !== undefined && linea2[0] !== undefined & linea3[0] !== undefined){              
-            if(linea1[0].user.activebuckets.length > 0){                                
-                linea1[0].user.activebuckets.forEach(value => {                                        
-                    if(value.bucketId == bucketid && value.state == true){                                              
-                        Line = linea1
-                    }                                           
-                })                
-            }else if(linea2[0].user.activebuckets.length > 0 ){
-                linea2[0].user.activebuckets.forEach(value => {                      
-                    if(value.bucketId == bucketid && value.state == true){                                
-                        Line = linea2
-                    }                                          
-                })
-            }else if( linea3[0].user.activebuckets.length > 0){
-                linea3[0].user.activebuckets.forEach(value => {                      
-                    if(value.bucketId == bucketid && value.state == true){                                        
-                        Line = linea3
-                    }else{                 
-                        Line = superUser
-                    }                                         
-                })
-            }else{                 
-                Line = superUser
-            }        
-        }                   
+                               
+        if(linea1[0].user.activebuckets.length > 0){                                
+            linea1[0].user.activebuckets.forEach(value => {   
+                console.log(value, '1')                                                                           
+                if(value.bucketId == bucketid && value.state == true){                                                                 
+                    Line = linea1
+                }                                   
+            })                          
+        }else if(linea2[0].user.activebuckets.length > 0 ){
+            linea2[0].user.activebuckets.forEach(value => {  
+                console.log(value, '2')                                                                  
+                if(value.bucketId == bucketid && value.state == true){                                                   
+                    Line = linea2
+                }                                        
+            })
+           
+        }else if(linea3[0].user.activebuckets.length > 0){
+            linea3[0].user.activebuckets.forEach(value => {   
+                console.log(value, '3')                                     
+                if(value.bucketId == bucketid && value.state == true){                                                       
+                    Line = linea3
+                }else{                 
+                    Line = superUser
+                }                                         
+            })
+        }else{                 
+            Line = superUser
+        }                                       
         return Line;                            
     } catch (error) {
         console.error(error)        
@@ -448,8 +455,9 @@ const  validateLevels1 = async(data, bucketid) =>{
 async function validateLevels2(data, bucketid){ 
     try {        
         let spillOver = data.spillOver;
+        let linea1, linea2, linea3;
         let Line;
-        const linea1 = await Matrix.findAll({
+        linea1 = await Matrix.findAll({
             where:{
                 orderMatrix:spillOver
             },
@@ -458,29 +466,34 @@ async function validateLevels2(data, bucketid){
                     model:User , include:ActiveBuckets       
                 }
             ]
-        });             
-        const linea2 = await Matrix.findAll({
-            where:{
-                orderMatrix:linea1[0].spillOver
-            },
-            include:[
-                {
-                    model:User , include:ActiveBuckets       
-                }
-            ]
-        });
+        }); 
         
-        const linea3 = await Matrix.findAll({
-            where:{
-                orderMatrix:linea2[0].spillOver
-            },
-            include:[
-                {
-                    model:User , include:ActiveBuckets       
-                }
-            ]
-        });
-
+        if(linea1.length > 0){            
+            linea2 = await Matrix.findAll({
+                where:{
+                    orderMatrix:linea1[0].spillOver
+                },
+                include:[
+                    {
+                        model:User , include:ActiveBuckets       
+                    }
+                ]
+            });
+        }     
+       
+        if(linea2.length > 0){
+            linea3 = await Matrix.findAll({
+                where:{
+                    orderMatrix:linea2[0].spillOver
+                },
+                include:[
+                    {
+                        model:User , include:ActiveBuckets       
+                    }
+                ]
+            });
+        }        
+       
         const superUser = await Matrix.findAll({
             where:{
                     userId:1
@@ -489,26 +502,24 @@ async function validateLevels2(data, bucketid){
                 model:User
             }
         });               
-
-        if(linea2[0] !== undefined & linea3[0] !== undefined){  
-            if(linea2[0].user.activebuckets.length > 0 ){
-                linea2[0].user.activebuckets.forEach(value => {                      
-                    if(value.bucketId == bucketid && value.state == true){                                
-                        Line = linea2
-                    }                                          
-                })
-            }else if( linea3[0].user.activebuckets.length > 0){
-                linea3[0].user.activebuckets.forEach(value => {                      
-                    if(value.bucketId == bucketid && value.state == true){                                        
-                        Line = linea3
-                    }else{                 
-                        Line = superUser
-                    }                                       
-                })
-            }else{                 
-                Line = superUser
-            }                                   
-        }         
+        
+        if(linea2.length > 0 && linea2[0].user.activebuckets.length > 0 ){
+            linea2[0].user.activebuckets.forEach(value => {                      
+                if(value.bucketId == bucketid && value.state == true){                                
+                    Line = linea2
+                }                                          
+            })
+        }else if(linea3 != undefined && linea3.length > 0 && linea3[0].user.activebuckets.length > 0){
+            linea3[0].user.activebuckets.forEach(value => {                      
+                if(value.bucketId == bucketid && value.state == true){                                        
+                    Line = linea3
+                }else{                 
+                    Line = superUser
+                }                                       
+            })
+        }else{                 
+            Line = superUser
+        }                                                       
         return Line;
     } catch (error) {
         console.error(error)        
@@ -516,9 +527,10 @@ async function validateLevels2(data, bucketid){
 }
 async function validateLevels3(data, bucketid){ 
     try {        
-        let spillOver = data.spillOver;              
+        let spillOver = data.spillOver; 
+        let linea1, linea2, linea3;             
         let Line;
-        const linea1 = await Matrix.findAll({
+        linea1 = await Matrix.findAll({
             where:{
                 orderMatrix:spillOver
             },
@@ -528,29 +540,31 @@ async function validateLevels3(data, bucketid){
                 }
             ]
         })      
-        
-        const linea2 = await Matrix.findAll({
-            where:{
-                orderMatrix:linea1[0].spillOver
-            },
-            include:[
-                {
-                    model:User , include:ActiveBuckets       
-                }
-            ]
-        })  
-
-      
-        const linea3 = await Matrix.findAll({
+        if(linea1.length > 0){
+            linea2 = await Matrix.findAll({
                 where:{
-                    orderMatrix:linea2[0].spillOver
+                    orderMatrix:linea1[0].spillOver
                 },
-            include:[
-                {
-                    model:User , include:ActiveBuckets       
-                }
-            ]
-        })
+                include:[
+                    {
+                        model:User , include:ActiveBuckets       
+                    }
+                ]
+            })  
+        }
+        
+        if(linea2.length > 0){
+            linea3 = await Matrix.findAll({
+                    where:{
+                        orderMatrix:linea2[0].spillOver
+                    },
+                include:[
+                    {
+                        model:User , include:ActiveBuckets       
+                    }
+                ]
+            })
+        }
 
         const superUser = await Matrix.findAll({
             where:{
@@ -560,17 +574,19 @@ async function validateLevels3(data, bucketid){
                 model:User
             }
         });         
-        if(linea3[0] !== undefined){              
-            if(linea3[0].user.activebuckets.length > 0){                                                  
-                linea3[0].user.activebuckets.forEach(value => {                      
-                    if(value.bucketId == bucketid && value.state == true){                                        
-                        Line = linea3
-                    }else{                 
-                        Line = superUser
-                    }                                          
-                })                                                                                                                
-            }                            
-        }
+               
+        if( linea3 != undefined && linea3.length > 0 && linea3[0].user.activebuckets.length > 0){                                                  
+            linea3[0].user.activebuckets.forEach(value => {                      
+                if(value.bucketId == bucketid && value.state == true){                                        
+                    Line = linea3
+                }else{                 
+                    Line = superUser
+                }                                          
+            })                                                                                                                
+        }else{                 
+            Line = superUser
+        }                           
+        
         return Line;                                
     } catch (error) {
         console.error(error)        
