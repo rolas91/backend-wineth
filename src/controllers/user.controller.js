@@ -4,6 +4,26 @@ const Payment = require('../models/Payments');
 const Matrix = require('../models/Matrix');
 const Users = require('../models/Users');
 const ActiveBucket = require('../models/ActiveBuckets');
+
+exports.GetSendData = async(req, res) => {
+    try {
+        let userId = 0;
+        if(req.userid != undefined){
+            userId = req.userid
+        }else{
+            userId = req.params.id
+        }             
+        const getProfits = await Payment.findAll({
+            where:{
+                sender:userId
+            }            
+        });        
+        res.status(200).json({getProfits})
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({status:400, message:'error server'})
+    }
+}
 exports.GetProfitsData = async(req, res) => {
     try {
         let userId = 0;

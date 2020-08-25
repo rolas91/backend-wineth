@@ -24,6 +24,7 @@ exports.VerifyPay = async(req, res) => {
                 Payment.create({
                     userId: receiveId,
                     sender: userId,
+                    hash: hash,
                     amount: amount,
                     bucketId:bucketId,
                     date:new Date()

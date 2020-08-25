@@ -9,6 +9,7 @@ const Payment = db.define('payment',{
     },
     userId: Sequelize.INTEGER,
     sender:Sequelize.INTEGER,
+    hash:Sequelize.STRING,
     amount:Sequelize.DECIMAL(10,4),
     bucketId:Sequelize.INTEGER,
     date:Sequelize.DATEONLY
