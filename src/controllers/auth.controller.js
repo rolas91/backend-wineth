@@ -42,11 +42,12 @@ exports.signIn = async(req, res) =>{
             where:{userId:user.id}, 
             order: [ [ 'id', 'DESC' ]]
         }); 
+        
         if(!user) return res.status(400).json({status:400, message:'wallet is wrong'})       
         res.status(200).json({
             status:200,            
             accessToken:createAccessToken(user),
-            isActiveBucket:(lastBucket.length != 0 && lastBucket.state > 0) ? lastBucket.state : false,
+            isActiveBucket:(lastBucket.length != 0 && lastBucket[0].state == true) ? lastBucket[0].state : false,
             message:'user is authenticated'            
             // refreshToken:createRefreshToken(user)
         })
